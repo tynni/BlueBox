@@ -1,4 +1,5 @@
 public class Rent {
+    private int rentID;
     private int movieID;
     private int customerID;
     private int duration;
@@ -6,12 +7,16 @@ public class Rent {
 
     public Rent() {}
 
-    public Rent(int movieID, int customerID, int duration, double price) {
+    public Rent(int rentID, int movieID, int customerID, int duration, double price) {
+        this.rentID = rentID;
         this.movieID = movieID;
         this.customerID = customerID;
         this.duration = duration;
         this.price = price;
     }
+
+    public int getRentID() { return rentID; }
+    public void setRentID(int rentID) { this.rentID = rentID; }
 
     public int getMovieID() { return movieID; }
     public void setMovieID(int movieID) { this.movieID = movieID; }
