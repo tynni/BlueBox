@@ -1,11 +1,6 @@
-package controllers;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
-
-import Rent;
-import RentDAO;
 
 public class RentController {
     private RentDAO rentDAO = new RentDAO();

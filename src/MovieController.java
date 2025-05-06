@@ -1,11 +1,6 @@
-package controllers;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
-
-import Movie;
-import MovieDAO;
 
 public class MovieController {
     private MovieDAO movieDAO = new MovieDAO();

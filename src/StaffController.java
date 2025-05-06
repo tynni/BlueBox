@@ -1,11 +1,6 @@
-package controllers;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
-
-import Staff;
-import StaffDAO;
 
 public class StaffController {
     private StaffDAO staffDAO = new StaffDAO();

@@ -1,11 +1,6 @@
-package controllers;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
-
-import Status;
-import StatusDAO;
 
 public class StatusController {
     private StatusDAO statusDAO = new StatusDAO();

@@ -1,11 +1,6 @@
-package controllers;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
-
-import Customer;
-import CustomerDAO;
 
 public class CustomerController {
     private CustomerDAO customerDAO = new CustomerDAO();
