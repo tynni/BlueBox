@@ -75,8 +75,7 @@ INSERT INTO MovieRentalStaff (Name) VALUES
 ('Luna Park');
 
 CREATE TABLE Status (
-    StatusID INT AUTO_INCREMENT PRIMARY KEY,
-    MovieID INT,
+    MovieID INT PRIMARY KEY,
     Status ENUM('Rented', 'Returned', 'Overdue'),
     FOREIGN KEY (MovieID) REFERENCES Movies(MovieID)
 );
@@ -126,11 +125,11 @@ INSERT INTO Rents (MovieID, CustomerID, Duration, Price) VALUES
 (15, 15, 9, 3.75);
 
 CREATE TABLE Ratings (
-    RatingID INT AUTO_INCREMENT PRIMARY KEY,
     CustomerID INT,
     MovieID INT,
     Rating INT CHECK (Rating BETWEEN 1 AND 5),
     Review TEXT,
+    PRIMARY KEY (CustomerID, MovieID),
     FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
     FOREIGN KEY (MovieID) REFERENCES Movies(MovieID)
 );
