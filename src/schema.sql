@@ -77,7 +77,9 @@ INSERT INTO MovieRentalStaff (Name) VALUES
 CREATE TABLE Status (
     MovieID INT PRIMARY KEY,
     Status ENUM('Rented', 'Returned', 'Overdue'),
-    FOREIGN KEY (MovieID) REFERENCES Movies(MovieID)
+    StaffID INT,
+    FOREIGN KEY (MovieID) REFERENCES Movies(MovieID),
+    FOREIGN KEY (StaffID) REFERENCES MovieRentalStaff(StaffID)
 );
 
 INSERT INTO Status (MovieID, Status) VALUES
@@ -133,6 +135,7 @@ CREATE TABLE Ratings (
     FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
     FOREIGN KEY (MovieID) REFERENCES Movies(MovieID)
 );
+
 
 INSERT INTO Ratings (CustomerID, MovieID, Rating, Review) VALUES
 (1, 1, 5, 'Absolutely loved it!'),
