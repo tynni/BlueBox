@@ -130,26 +130,24 @@ CREATE TABLE Ratings (
     CustomerID INT,
     MovieID INT,
     Rating INT CHECK (Rating BETWEEN 1 AND 5),
-    Review TEXT,
     PRIMARY KEY (CustomerID, MovieID),
     FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
     FOREIGN KEY (MovieID) REFERENCES Movies(MovieID)
 );
 
-
-INSERT INTO Ratings (CustomerID, MovieID, Rating, Review) VALUES
-(1, 1, 5, 'Absolutely loved it!'),
-(2, 2, 4, 'Funny and clever.'),
-(3, 3, 5, 'Brilliant performance.'),
-(4, 4, 3, 'Creepy but interesting.'),
-(5, 5, 4, 'Fun for the family.'),
-(6, 6, 2, 'Too futuristic.'),
-(7, 7, 5, 'Iconic.'),
-(8, 8, 4, 'Beautiful animation.'),
-(9, 9, 3, 'Emotional story.'),
-(10, 10, 5, 'Mind-blowing.'),
-(11, 11, 4, 'Very original.'),
-(12, 12, 5, 'Epic battle scenes.'),
-(13, 13, 4, 'Realistic war drama.'),
-(14, 14, 5, 'Action + comedy = win.'),
-(15, 15, 5, 'Classic mob story.');
+INSERT INTO Ratings (CustomerID, MovieID, Rating) VALUES
+(1, 1, 5),
+(2, 2, 4),
+(3, 3, 5),
+(4, 4, 3),
+(5, 5, 4),
+(6, 6, 2),
+(7, 7, 5),
+(8, 8, 4),
+(9, 9, 3),
+(10, 10, 5),
+(11, 11, 4),
+(12, 12, 5),
+(13, 13, 4),
+(14, 14, 5),
+(15, 15, 5);
