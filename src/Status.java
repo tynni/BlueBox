@@ -1,25 +1,22 @@
 public class Status {
-    private int statusID;
-    private int rentID;
-    private String status; // "Rented", "Returned", or "Overdue"
+    private int movieID;      // was statusID / rentID
+    private String status;    // enum("Rented","Returned","Overdue")
+    private Integer staffID;  // who handled it
 
     public Status() {}
 
-    public Status(int statusID, int rentID, String status) {
-        this.statusID = statusID;
-        this.rentID = rentID;
-        this.status = status;
+    public Status(int movieID, String status, Integer staffID) {
+        this.movieID = movieID;
+        this.status  = status;
+        this.staffID = staffID;
     }
 
-    public int getStatusID() { return statusID; }
+    public int getMovieID()       { return movieID; }
+    public void setMovieID(int id){ this.movieID = id; }
 
-    public void setStatusID(int statusID) { this.statusID = statusID; }
+    public String getStatus()         { return status; }
+    public void setStatus(String st)  { this.status = st; }
 
-    public int getRentID() { return rentID; }
-
-    public void setRentID(int rentID) { this.rentID = rentID; }
-
-    public String getStatus() { return status; }
-
-    public void setStatus(String status) { this.status = status; }
+    public Integer getStaffID()           { return staffID; }
+    public void setStaffID(Integer sid)   { this.staffID = sid; }
 }

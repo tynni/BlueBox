@@ -2,73 +2,64 @@ import java.sql.*;
 import java.util.*;
 
 public class StatusDAO {
-    private Connection connection;
+    private Connection connection = DBConnection.getConnection();
 
-    public StatusDAO() {
-        this.connection = DBConnection.getConnection();
-    }
-
-    // Create
-    public void addStatus(Status status) throws SQLException {
-        String query = "INSERT INTO Status (RentID, StatusType) VALUES (?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, status.getRentID());
-            stmt.setString(2, status.getStatus());  // fixed here
-            stmt.executeUpdate();
+    // Create or overwrite status for a given movie
+    public void upsertStatus(Status s) throws SQLException {
+        // if a row for this movieID already exists, update it; otherwise insert
+        String sql =
+                "INSERT INTO Status (MovieID, Status, StaffID) VALUES (?,?,?) " +
+                        "ON DUPLICATE KEY UPDATE Status = VALUES(Status), StaffID = VALUES(StaffID)";
+        try (PreparedStatement p = connection.prepareStatement(sql)) {
+            p.setInt(1, s.getMovieID());
+            p.setString(2, s.getStatus());
+            if (s.getStaffID() != null) p.setInt(3, s.getStaffID());
+            else                        p.setNull(3, Types.INTEGER);
+            p.executeUpdate();
         }
     }
 
-    // Read
-    public Status getStatus(int statusID) throws SQLException {
-        String query = "SELECT * FROM Status WHERE StatusID = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, statusID);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return new Status(
-                        rs.getInt("StatusID"),
-                        rs.getInt("RentID"),
-                        rs.getString("StatusType")
-                );
+    // Read one status by movieID
+    public Status getStatus(int movieID) throws SQLException {
+        String sql = "SELECT MovieID, Status, StaffID FROM Status WHERE MovieID = ?";
+        try (PreparedStatement p = connection.prepareStatement(sql)) {
+            p.setInt(1, movieID);
+            try (ResultSet rs = p.executeQuery()) {
+                if (rs.next()) {
+                    return new Status(
+                            rs.getInt("MovieID"),
+                            rs.getString("Status"),
+                            rs.getObject("StaffID") == null ? null : rs.getInt("StaffID")
+                    );
+                }
             }
         }
         return null;
     }
 
-    // Read all
+    // Read all statuses
     public List<Status> getAllStatuses() throws SQLException {
-        List<Status> statuses = new ArrayList<>();
-        String query = "SELECT * FROM Status";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            ResultSet rs = stmt.executeQuery();
+        List<Status> list = new ArrayList<>();
+        String sql = "SELECT MovieID, Status, StaffID FROM Status";
+        try (PreparedStatement p = connection.prepareStatement(sql);
+             ResultSet rs = p.executeQuery()) {
             while (rs.next()) {
-                statuses.add(new Status(
-                        rs.getInt("StatusID"),
-                        rs.getInt("RentID"),
-                        rs.getString("StatusType")
+                list.add(new Status(
+                        rs.getInt("MovieID"),
+                        rs.getString("Status"),
+                        rs.getObject("StaffID") == null ? null : rs.getInt("StaffID")
                 ));
             }
         }
-        return statuses;
+        return list;
     }
 
-    // Update
-    public void updateStatus(Status status) throws SQLException {
-        String query = "UPDATE Status SET RentID = ?, StatusType = ? WHERE StatusID = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, status.getRentID());
-            stmt.setString(2, status.getStatus());
-            stmt.setInt(3, status.getStatusID());
-            stmt.executeUpdate();
-        }
-    }
-
-    // Delete
-    public void deleteStatus(int statusID) throws SQLException {
-        String query = "DELETE FROM Status WHERE StatusID = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, statusID);
-            stmt.executeUpdate();
+    // Delete status for a movie
+    public void deleteStatus(int movieID) throws SQLException {
+        String sql = "DELETE FROM Status WHERE MovieID = ?";
+        try (PreparedStatement p = connection.prepareStatement(sql)) {
+            p.setInt(1, movieID);
+            p.executeUpdate();
         }
     }
 }

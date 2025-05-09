@@ -82,22 +82,22 @@ CREATE TABLE Status (
     FOREIGN KEY (StaffID) REFERENCES MovieRentalStaff(StaffID)
 );
 
-INSERT INTO Status (MovieID, Status) VALUES
-(1, 'Rented'),
-(2, 'Returned'),
-(3, 'Returned'),
-(4, 'Rented'),
-(5, 'Overdue'),
-(6, 'Rented'),
-(7, 'Returned'),
-(8, 'Rented'),
-(9, 'Overdue'),
-(10, 'Returned'),
-(11, 'Rented'),
-(12, 'Returned'),
-(13, 'Returned'),
-(14, 'Overdue'),
-(15, 'Rented');
+INSERT INTO Status (MovieID, Status, StaffID) VALUES
+ (1,  'Rented',   5),
+ (2,  'Returned', 2),
+ (3,  'Returned', 3),
+ (4,  'Rented',   8),
+ (5,  'Overdue',  1),
+ (6,  'Rented',   6),
+ (7,  'Returned', 7),
+ (8,  'Rented',   4),
+ (9,  'Overdue',  9),
+ (10, 'Returned', 10),
+ (11, 'Rented',   11),
+ (12, 'Returned', 12),
+ (13, 'Returned', 13),
+ (14, 'Overdue',  14),
+ (15, 'Rented',   15);
 
 CREATE TABLE Rents (
     RentID INT AUTO_INCREMENT PRIMARY KEY,

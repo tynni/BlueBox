@@ -9,10 +9,6 @@ public class MovieController {
     public void addMovie() throws SQLException {
         System.out.print("Title: ");
         String title = scanner.nextLine();
-        System.out.print("Genre: ");
-        String genre = scanner.nextLine();
-        System.out.print("Year: ");
-        int year = Integer.parseInt(scanner.nextLine());
         System.out.print("Production: ");
         String production = scanner.nextLine();
         System.out.print("Length: ");
@@ -22,7 +18,7 @@ public class MovieController {
         System.out.print("Cast: ");
         String cast = scanner.nextLine();
 
-        Movie movie = new Movie(0, title, genre, year, production, length, description, cast);
+        Movie movie = new Movie(0, title, production, length, description, cast);
         movieDAO.addMovie(movie);
         System.out.println("Movie added.");
     }
@@ -30,7 +26,7 @@ public class MovieController {
     public void viewAllMovies() throws SQLException {
         List<Movie> movies = movieDAO.getAllMovies();
         for (Movie m : movies) {
-            System.out.println(m.getMovieID() + " | " + m.getTitle() + " | " + m.getGenre());
+            System.out.println(m.getMovieID() + " | " + m.getTitle());
         }
     }
 }

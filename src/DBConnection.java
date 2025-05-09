@@ -5,9 +5,9 @@ public class DBConnection {
         try {
             //comment when working
 
-            String url = "jdbc:mysql://localhost:3306/your_db_name";
-            String user = "your_username";
-            String password = "your_password";
+            String url = "jdbc:mysql://localhost:3306/bluebox";
+            String user = "root";
+            String password = "blueboxp";
 
             Connection conn = DriverManager.getConnection(url, user, password);
             return conn;
