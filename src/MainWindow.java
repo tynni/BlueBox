@@ -185,7 +185,7 @@ public class MainWindow {
     }
 
     private JPanel createStatusPanel() {
-        String[] cols = {"MovieID","Status","StaffID"};
+        String[] cols = {"MovieID", "Title", "Status", "CustomerID", "StaffID"};
         DefaultTableModel model = new DefaultTableModel(cols,0);
         JTable table = new JTable(model);
         table.setAutoCreateRowSorter(true);
@@ -194,12 +194,26 @@ public class MainWindow {
         Runnable reload = () -> {
             model.setRowCount(0);
             try {
+                List<Movie> movies = new MovieDAO().getAllMovies();
+                List<Customer> customers = new CustomerDAO().getAllCustomers();
+                List<Rent> rents = new RentDAO().getAllRents();
+
                 for (Status s : new StatusDAO().getAllStatuses()) {
-                    model.addRow(new Object[]{
-                            s.getMovieID(),
-                            s.getStatus(),
-                            s.getStaffID()
-                    });
+                    int mid = s.getMovieID();
+                    String title = "Unknown";
+                    for (Movie m : movies) {
+                        if (m.getMovieID() == mid) {
+                            title = m.getTitle();
+                            break;
+                        }
+                    }
+                    Integer custId = null;
+                    for (Rent r : rents) {
+                        if (r.getMovieID() == mid) {
+                            custId = r.getCustomerID();
+                        }
+                    }
+                    model.addRow(new Object[]{ mid, title, s.getStatus(), custId, s.getStaffID() });
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -214,6 +228,7 @@ public class MainWindow {
 
         JTextField txtMovieID = new JTextField(5);
         JComboBox<String> cbType = new JComboBox<>(new String[]{"Rented","Returned","Overdue"});
+        JTextField txtCustomerID = new JTextField(5);
         JTextField txtStaffID = new JTextField(5);
         JButton btnSave = new JButton("Save Status");
         JButton btnRefresh = new JButton("Refresh");
@@ -222,41 +237,31 @@ public class MainWindow {
         c.gridx=1;           form.add(txtMovieID, c);
         c.gridx=0; c.gridy=1; form.add(new JLabel("Status:"), c);
         c.gridx=1;           form.add(cbType, c);
-        c.gridx=0; c.gridy=2; form.add(new JLabel("Staff ID:"), c);
+        c.gridx=0; c.gridy=2; form.add(new JLabel("Customer ID:"), c);
+        c.gridx=1;           form.add(txtCustomerID, c);
+        c.gridx=0; c.gridy=3; form.add(new JLabel("Staff ID:"), c);
         c.gridx=1;           form.add(txtStaffID, c);
-        c.gridx=0; c.gridy=3; c.gridwidth=2; c.anchor=GridBagConstraints.CENTER;
+        c.gridx=0; c.gridy=4; c.gridwidth=2; c.anchor=GridBagConstraints.CENTER;
         form.add(btnSave, c);
 
         btnSave.addActionListener(e -> {
             try {
                 int mid = Integer.parseInt(txtMovieID.getText().trim());
                 String type = (String)cbType.getSelectedItem();
-                Integer sid = txtStaffID.getText().trim().isEmpty()
-                        ? null
-                        : Integer.parseInt(txtStaffID.getText().trim());
-                new SwingWorker<Void,Void>() {
+                Integer cid = txtCustomerID.getText().trim().isEmpty() ? null : Integer.parseInt(txtCustomerID.getText().trim());
+                Integer sid = txtStaffID.getText().trim().isEmpty() ? null : Integer.parseInt(txtStaffID.getText().trim());
+                new SwingWorker<Void,Void>(){
                     protected Void doInBackground() throws Exception {
+                        if (cid != null) new RentDAO().addRent(new Rent(0, mid, cid, 0, 0));
                         new StatusDAO().upsertStatus(new Status(mid, type, sid));
                         return null;
                     }
-                    protected void done() {
-                        JOptionPane.showMessageDialog(frame,
-                                "Status saved!",
-                                "Success",
-                                JOptionPane.INFORMATION_MESSAGE);
-                        txtMovieID.setText("");
-                        txtStaffID.setText("");
-                        reload.run();
-                    }
+                    protected void done(){ reload.run(); }
                 }.execute();
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(frame,
-                        "Please enter valid numeric IDs.",
-                        "Input Error",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Enter valid IDs", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-
         btnRefresh.addActionListener(e -> reload.run());
 
         JPanel bottom = new JPanel(new BorderLayout());
@@ -389,7 +394,7 @@ public class MainWindow {
         c.anchor = GridBagConstraints.WEST;
 
         JTextField txtID   = new JTextField(5);
-        txtID.setEditable(false);
+        txtID.setEditable(true);
         JTextField txtName = new JTextField(12);
         JButton btnAdd    = new JButton("Add");
         JButton btnUpdate = new JButton("Update");
